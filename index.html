@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificação de Domínios</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 20px;
+        }
+        ul li {
+            background: #fff;
+            margin: 5px auto;
+            padding: 10px;
+            border: 1px solid #ddd;
+            width: 80%;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Verificador de Domínios</h1>
+    <ul id="resultados"></ul>
+
+    <script>
+        const resultados = document.getElementById("resultados");
+
+        async function iniciarVerificacao() {
+            const response = await fetch("verificar.php");
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder("utf-8");
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                const chunk = decoder.decode(value);
+                const dominio = chunk.trim();
+
+                if (dominio) {
+                    const li = document.createElement("li");
+                    li.textContent = dominio;
+                    resultados.appendChild(li);
+                }
+            }
+        }
+
+        iniciarVerificacao();
+    </script>
+</body>
+</html>
